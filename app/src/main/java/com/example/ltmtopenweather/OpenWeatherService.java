@@ -16,8 +16,8 @@ import org.json.JSONObject;
 
 public abstract class OpenWeatherService {
 
-    private Context context;
-    private RequestQueue requestQueue;
+
+    private final RequestQueue requestQueue;
 
     private final static String API_KEY = "928133397391e6af373468b74849e7ab";
 
@@ -25,7 +25,6 @@ public abstract class OpenWeatherService {
     protected abstract void getCityWeatherFail();
 
     public OpenWeatherService(Context context) {
-        this.context = context;
         this.requestQueue = Volley.newRequestQueue(context);
     }
 
@@ -41,36 +40,27 @@ public abstract class OpenWeatherService {
     public void getWeather(String url) {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            City city = new City();
-                            String cityName = response.getString("name");
-                            city.setName(cityName);
+                (Request.Method.GET, url, null, response -> {
+                    try {
+                        City city = new City();
+                        String cityName = response.getString("name");
+                        city.setName(cityName);
 
-                            String icon = response.getJSONArray("weather")
-                                    .getJSONObject(0).getString("icon");
-                            city.setIconWeather(icon);
+                        String icon = response.getJSONArray("weather")
+                                .getJSONObject(0).getString("icon");
+                        city.setIconWeather(icon);
 
-                            String temp = response.getJSONObject("main")
-                                    .getString("temp");
+                        String temp = response.getJSONObject("main")
+                                .getString("temp");
 
-                            city.setDescription(temp);
+                        city.setDescription(temp);
 
-                            getCityWeatherSuccess(city);
+                        getCityWeatherSuccess(city);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        getCityWeatherFail();
-                    }
-                });
+                }, error -> getCityWeatherFail());
         requestQueue.add(jsonObjectRequest);
 
     }
