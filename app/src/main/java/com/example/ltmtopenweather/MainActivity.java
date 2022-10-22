@@ -1,18 +1,15 @@
 package com.example.ltmtopenweather;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONObject;
+import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         openWeatherService = new OpenWeatherService(this) {
             @Override
             protected void getCityWeatherSuccess(City city) {
-                tvDescription.setText(city.getName()+", "+city.getDescription()+"*C");
+                tvDescription.setText(city.getName() + ", " + city.getDescription() + "*C");
 
                 // Hình ảnh thời tiết
                 String urlIcon = openWeatherService.buildIconURL(city.getIconWeather());
@@ -45,17 +42,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void getCityWeatherFail() {
-                Toast.makeText(MainActivity.this,"Không có dữ liệu",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Không có dữ liệu", Toast.LENGTH_SHORT).show();
             }
         };
-
     }
 
     // Khi click vao tim kiem => chay ham nay
     public void searchCityByName(View view) {
         // Lay du lieu Edittext -> city -> tao ra URL
         String city = edtCity.getText().toString().trim();
-        if(city.isEmpty()){
+        if (city.isEmpty()) {
             edtCity.setError("Hãy nhập dữ liệu!");
             return;
         }
